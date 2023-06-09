@@ -1,0 +1,38 @@
+from selenium import webdriver
+import unittest
+
+class LoginTest(unittest.TestCase):
+    def setUp(self):
+        self.driver = webdriver.Chrome('/path/to/chromedriver')
+
+    def tearDown(self):
+        self.driver.quit()
+
+    def test_login_success(self):
+        self.driver.get('http://example.com/login')
+        username_input = self.driver.find_element_by_id('username')
+        password_input = self.driver.find_element_by_id('password')
+        login_button = self.driver.find_element_by_id('loginButton')
+
+        username_input.send_keys('myusername')
+        password_input.send_keys('mypassword')
+        login_button.click()
+
+        welcome_message = self.driver.find_element_by_id('welcomeMessage')
+        self.assertTrue(welcome_message.is_displayed())
+
+    def test_login_failure(self):
+        self.driver.get('http://example.com/login')
+        username_input = self.driver.find_element_by_id('username')
+        password_input = self.driver.find_element_by_id('password')
+        login_button = self.driver.find_element_by_id('loginButton')
+
+        username_input.send_keys('invaliduser')
+        password_input.send_keys('wrongpassword')
+        login_button.click()
+
+        error_message = self.driver.find_element_by_id('errorMessage')
+        self.assertTrue(error_message.is_displayed())
+
+if __name__ == '__main__':
+    unittest.main()
