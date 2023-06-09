@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url:  ‘https://github.com/kashirao1122/Assignment4’
+            }
+        }
+        
+        stage('Build') {
+            steps {
+                sh 'npm install' 
+                sh ' npm run build' 
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'python selenium_test.py' 
+            }
+        }
+        
+        stage('Publish Results') {
+            steps {
+                junit 'path/to/test-reports/**/*.xml' // Example: Publish JUnit XML test reports
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'kubectl apply -f deployment.yaml' 
+            }
+        }
+    }
+}
